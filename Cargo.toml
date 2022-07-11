@@ -1,0 +1,22 @@
+[package]
+name = "tide-flash"
+version = "0.1.0"
+authors = ["Thomas Holloway <nyxtom@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+description = "Tide (http-rs/tide) Flash Messages Middleware"
+homepage = "https://github.com/nyxtom/tide-flash"
+repository = "https://github.com/nyxtom/tide-flash"
+keywords = ["log", "api", "flash", "tide"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.56"
+http-types = "2.12.0"
+log = "0.4.17"
+serde = { version = "1.0.138", features = ["derive"] }
+serde_json = "1.0.82"
+tide = { version = "0.16.0", default-features = false, features = ["cookies"] }
+time = { version = "0.2.6", default-features = false, features = ["std"] }
