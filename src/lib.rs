@@ -14,7 +14,7 @@ pub mod prelude {
     pub use crate::response_ext::*;
 }
 
-#[derive(Default, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct Flash {
     pub messages: Vec<FlashMessage>,
 }
