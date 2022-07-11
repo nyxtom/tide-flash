@@ -9,7 +9,7 @@ mod response_ext;
 pub use flash_store::FlashStore;
 pub use middleware::FlashMiddleware;
 
-pub mod prelude {
+pub mod ext {
     pub use crate::request_ext::*;
     pub use crate::response_ext::*;
 }

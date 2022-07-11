@@ -45,3 +45,75 @@ impl Default for CookieConfig {
     }
 }
 ```
+
+Now to simply use it you can import the response extensions through:
+
+```rust
+use tide_flash::ext::*;
+use tide::{Response, Request, Redirect};
+
+pub async fn authenticate(mut req: Request<State>) -> tide::Result {
+    match req.body_form::<UserForm>().await {
+        Ok(form) => {
+            if form.username == "foo" && form.password == "bar" {
+                let claims = Claims {
+                    username: String::from("foo"),
+                    exp: 10000000000,
+                    sub: String::from("asdf"),
+                    uid: 1,
+                };
+                req.login(claims)?;
+                Ok(Redirect::new("/").into())
+            } else {
+                let mut res: Response = Redirect::new("/").into();
+                res.flash_error("invalid credentials");
+                Ok(res)
+            }
+        }
+        Err(e) => {
+            let mut res: Response = Redirect::new("/").into();
+            res.flash_error(e.to_string());
+            Ok(res)
+        }
+    }
+}
+```
+
+There are a number of simple response extension utilities you can use here including:
+
+```rust
+pub trait ResponseFlashExt {
+    fn flash(&mut self, level: &str, msg: String);
+    fn flash_success<S: Into<String>>(&mut self, msg: S);
+    fn flash_info<S: Into<String>>(&mut self, msg: S);
+    fn flash_warn<S: Into<String>>(&mut self, msg: S);
+    fn flash_error<S: Into<String>>(&mut self, msg: S);
+    fn flash_debug<S: Into<String>>(&mut self, msg: S);
+}
+```
+
+To obtain the corresponding flash messages from the `tide::Request` use the **flash** function on the request extension:
+
+```rust
+impl<'request, T: Serialize> Context<'request, T> {
+    pub fn with_data(request: &'request Request<State>, data: T) -> Self {
+        Self {
+            request,
+            flash: request.flash(),
+            claims: request.claims(),
+            data: Some(data),
+        }
+    }
+
+    pub fn render(self, template: &str) -> Result<String, handlebars::RenderError> {
+        self.request.state().render(
+            template,
+            &serde_json::json!({
+                "flash": self.flash,
+                "claims": self.claims,
+                "data": self.data
+            }),
+        )
+    }
+}
+```
