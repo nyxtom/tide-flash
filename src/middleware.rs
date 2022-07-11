@@ -7,6 +7,12 @@ pub struct FlashMiddleware<Store> {
     pub store: Store,
 }
 
+impl<Store: FlashStore> FlashMiddleware<Store> {
+    pub fn new(store: Store) -> Self {
+        Self { store }
+    }
+}
+
 #[async_trait]
 impl<State, Store> Middleware<State> for FlashMiddleware<Store>
 where
