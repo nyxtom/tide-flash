@@ -4,5 +4,44 @@
 
 ## Examples
 
+To setup flash middleware with the configured *CookieStore* use the defaults below:
+
 ```rust
+use tide::log::LogMiddleware;
+use tide_flash::{cookies::CookieStore, FlashMiddleware};
+
+mod routes;
+
+#[async_std::main]
+async fn main() -> tide::Result<()> {
+    let mut app = tide::new();
+    dotenv::dotenv().ok();
+    env_logger::init();
+
+    app.with(LogMiddleware::new());
+    app.with(FlashMiddleware::new(CookieStore::default()));
+
+    routes::configure(&mut app);
+
+    let host = std::env::var("HOST").unwrap_or(String::from("0.0.0.0"));
+    let port: u16 = std::env::var("PORT")?.parse()?;
+    app.listen((host, port)).await?;
+
+    Ok(())
+}
+```
+
+Defaults for the CookieStore are:
+
+```rust
+impl Default for CookieConfig {
+    fn default() -> Self {
+        Self {
+            max_age: time::Duration::seconds(60),
+            site: SameSite::Lax,
+            http_only: true,
+            path: String::from("/"),
+        }
+    }
+}
 ```
