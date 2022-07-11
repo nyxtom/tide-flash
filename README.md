@@ -1,5 +1,9 @@
 # tide-flash
 
+[![Latest version](https://img.shields.io/crates/v/tide-flash.svg)](https://crates.io/crates/tide-flash)
+[![Documentation](https://docs.rs/tide-flash/badge.svg)](https://docs.rs/tide-flash)
+![License](https://img.shields.io/crates/l/tide-flash.svg)
+
 [http-rs/tide](https://github.com/http-rs/tide) flash messages middleware with support for configurable flash storage through *Cookies*. Extensible to allow other storage mechanisms such as sessions. Primarily a mechanism for sending one time log messages to the client that may not maintain the state on redirects (such as on request logins). This is commonly used for authentication requests where the login is on an **HTTP POST** and a response will need to both: *return a redirect* as well as *one time log messages* to render.
 
 ## Examples
